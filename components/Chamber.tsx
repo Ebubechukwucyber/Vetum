@@ -1,10 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { defaultPolicy } from "@/lib/defaultPolicy";
 import { parseIntent } from "@/lib/parseIntent";
 import { checkPolicy } from "@/lib/policy";
 import type { AutonomyLevel, Decision, Policy } from "@/lib/types";
+
+const VetumCore = dynamic(
+  () => import("./three/VetumCore").then((m) => m.VetumCore),
+  { ssr: false }
+);
 
 const CHIPS = [
   "Buy $3 of BNB on spot",
@@ -92,6 +98,18 @@ export function Chamber() {
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-mist sm:inline">
             Chamber
           </span>
+        </div>
+        <div className="h-12 w-12 overflow-hidden rounded-full border border-line">
+          <VetumCore
+            state={
+              policy.autonomy === "HALT"
+                ? "HALT"
+                : last
+                  ? last.kind
+                  : "idle"
+            }
+            className="h-12 w-12"
+          />
         </div>
         <div className="flex items-center gap-2 text-[11px] font-mono">
           <span className="rounded-full border border-line px-3 py-1 text-mist">
