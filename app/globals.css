@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #07070b;
+  color: #f4efe6;
+}
+
+body {
+  font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(123, 108, 255, 0.35);
+  color: #f4efe6;
+}
