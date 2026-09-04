@@ -1,0 +1,11 @@
+{
+  "name": "vetum",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Programmable control plane for Binance Agent OS. Agents propose. Policy decides.",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test lib/policy.test.ts lib/parseIntent.test.ts",
+    "test:js": "node --test lib/policy.test.mjs"
+  }
+}
