@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: "Vetum — agents propose, policy decides",
   description:
     "Programmable control plane for Binance Agent OS. Not a trading bot.",
+  icons: {
+    icon: "/favicon.jpg",
+    shortcut: "/favicon.jpg",
+  },
 };
 
 export default function RootLayout({

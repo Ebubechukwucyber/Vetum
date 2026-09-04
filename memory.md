@@ -1,50 +1,92 @@
 # Vetum memory
 
-Last updated: 2026-09-04 11:50 WAT  
-Operator: Ebubechukwu (`C:\Users\Ebubechukwu\Documents\vetum`)  
+Last updated: 2026-09-04 21:58 WAT  
+Operator: Ebubechukwu — `C:\Users\Ebubechukwu\Documents\vetum`  
 GitHub: https://github.com/Ebubechukwucyber/Vetum
+
+Hand this file to any LLM before they touch code.
+
+---
 
 ## Where we stopped
 
-**Chunk 1 — Constitution — DONE** (9/9 tests).
+Chunks 1–5 (paper) are built. Live MCP fill is optional. Contest remaining work is **git sync + 90s video + submit**.
 
-**Chunk 2 — Chamber — BUILT in this session. Pull these files, then `npm install` + `npm run dev`.**
+Hero: centered title, full core, labels on the right, no landing Paper badge.  
+Chamber: demo policy ($10k / confirm $2500), submit arrow + Enter.  
+Skill + executor verified: PAPER ALLOW $800 BNB, BLOCKED 10x perp.
 
-Landed:
+---
 
-- Next.js App Router + Tailwind
-- `/` stub → Enter the chamber
-- `/app` Chamber UI on the same `checkPolicy` / `parseIntent`
-- Four chips, HALT, two agents, plan / policy / ledger tabs
-- `lib/` import suffixes dropped (`.ts` → extensionless) so Next and `tsx` tests both work
-- Test runner is now `tsx --test` (not `node --experimental-strip-types`)
+## Law the next model must not break
 
-Not started: Three.js, Skill Hub, MCP live hook.
+- Gate is `lib/policy.ts` `checkPolicy`. Skill name is `check_policy`.  
+- Tests use `defaultPolicy` ($5-class fixture). UI uses `demoPolicy`.  
+- Do not put `$5` on marketing copy.  
+- Do not rename Vetum.  
+- Do not add candles, tokens, wallet connect, Earth, Bitcoin mesh.  
+- L0/L1/L2 are autonomy levels, not chains.
 
-## Next action for Ebubechukwu
+---
+
+## Push (operator — this sandbox cannot auth to your GitHub)
 
 ```powershell
 cd C:\Users\Ebubechukwu\Documents\vetum
-# copy new files from this session OR pull after you commit/push from here
-npm install
+
+# copy latest README.md BUILD.md memory.md plus any missing
+# skills/, lib/skill.ts, lib/executor.ts, DEMO.md, MCP.md,
+# components/GateLanding.tsx, Chamber.tsx, SkillStudio.tsx,
+# components/three/*, app/skill/page.tsx
+
 npm test
-npm run dev
+
+git add -A
+git status
+git commit -m "docs: senior readme, build log, memory — paper path complete"
+git push origin main
 ```
 
-Open http://localhost:3000 then `/app`.
+If `.git` is missing again:
 
-Click the four chips. You should see ALLOW, CONFIRM, DENY max notional, DENY futures. Then HALT and a $3 buy must DENY HALTED.
+```powershell
+git init
+git branch -M main
+git remote add origin https://github.com/Ebubechukwucyber/Vetum.git
+git add -A
+git commit -m "docs: senior readme, build log, memory — paper path complete"
+git pull origin main --allow-unrelated-histories --no-edit
+git push -u origin main
+```
 
-If that works: commit `feat(chamber): chunk 2 control plane ui` and push.
+Force only if you are sure local is the full tree:
 
-## Next for the following LLM
+```powershell
+git push -u origin main --force
+```
 
-Chunk 2 done-check is visual. After operator confirms the four chips, start **Chunk 3 only**: cinematic `/` + R3F orb. Do not rebuild the gate.
+---
+
+## Next for Ebubechukwu
+
+1. Confirm GitHub shows `skills/vetum/SKILL.md`, `lib/executor.ts`, cinematic `/`.  
+2. Record DEMO.md.  
+3. Pair MCP later if you want a balance read. Do not block submit on a live fill.
+
+## Next for another LLM
+
+Do not restyle. If asked to continue: wire a **read-only** MCP balance panel behind a flag, or polish DEMO captions. Do not rewrite `checkPolicy`.
+
+---
 
 ## Session log
 
 | When | What |
 |---|---|
-| 2026-09-03 | Product locked. Brand Vetum. |
-| 2026-09-04 | Chunk 1. 9/9 tests. Pushed to GitHub. |
-| 2026-09-04 11:50 | Chunk 2 Chamber scaffolded. Waiting on local `npm run dev` confirmation. |
+| 2026-09-03 | Product locked. Name Vetum. |
+| 2026-09-04 | Chunk 1 tests 9/9. Repo created. |
+| 2026-09-04 | Chunk 2 Chamber. Git reconnect after lost `.git`. |
+| 2026-09-04 | Chunk 3 R3F + cinematic. Hero iterated. |
+| 2026-09-04 | Chunk 4 Skill Hub. |
+| 2026-09-04 20:53 | Executor paper/blocked proven in PowerShell. |
+| 2026-09-04 21:58 | Docs pass. Waiting on operator push + video. |

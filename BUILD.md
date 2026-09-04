@@ -1,72 +1,81 @@
-# Vetum — 5 chunks
+# Vetum — build log
 
-**Line:** Agents propose. Policy decides. Binance executes.
+Line: Agents propose. Policy decides. Binance executes.
 
-Do not skip ahead. Each chunk has a done check. If the check fails, stay on that chunk.
-
----
-
-## Chunk 1 — Constitution (NOW)
-
-Pure policy engine. No UI. No Three.js. No MCP.
-
-- Types for Plan, Policy, Decision
-- `checkPolicy(plan, policy, context)` → ALLOW | DENY | CONFIRM
-- Intent parser (heuristic, not an LLM)
-- Circuit breaker / HALT
-- Example constitution (`policy.example.yaml`)
-- Node tests you can run with `npm test`
-
-**Done when:** `npm test` is green and `Buy $500 BTC` returns DENY for `max_notional_usd`.
+Do not reopen a done chunk unless tests or the four chips regress.
 
 ---
 
-## Chunk 2 — Chamber
+## Chunk 1 — Constitution — DONE
 
-`/app` control-plane UI on the engine from Chunk 1.
+- `lib/types.ts` Plan / Policy / Decision  
+- `lib/policy.ts` `checkPolicy`  
+- `lib/parseIntent.ts`  
+- `lib/defaultPolicy.ts` + `policy.example.yaml`  
+- `npm test` → 9/9  
 
-- Intent dock + chips
-- Plan → sim → decision stamp
-- Policy inspector
-- Ledger
-- HALT switch
-- Two agent names, one `checkPolicy()`
-
-**Done when:** four chips produce ALLOW / DENY / CONFIRM / HALT on screen without a page refresh.
+Done check: `Buy $500 BTC` against the **test** fixture is DENY MAX_NOTIONAL.
 
 ---
 
-## Chunk 3 — Gate (marketing + 3D)
+## Chunk 2 — Chamber — DONE
 
-`/` cinematic page + R3F core.
+- Next.js App Router + Tailwind  
+- `/app` intent dock, chips, plan / sim / stamp, policy, ledger, HALT  
+- PortfolioAgent + MemeAgent, one `checkPolicy`  
+- Submit: Enter **and** arrow-in-box  
+- Header: `L2 auto` (not bare L2), PAPER lamp, spent / cap  
 
-- Hero serif + orb
-- Loop diagram
-- Autonomy cards
-- Two-agents-one-gate
-- Chamber orb mirrors decision state
-
-**Done when:** 90s video can open on `/` then click into `/app`.
+Done check: four demo chips + HALT without refresh.
 
 ---
 
-## Chunk 4 — Skill + second agent
+## Chunk 3 — Gate (marketing + R3F) — DONE
 
-- `skills/vetum/SKILL.md`
-- `/skill` page
-- Dummy MemeAgent script that must call the same gate
-- README threat model + demo script
+- `/` cinematic, centered hero, no Paper pill on marketing  
+- `VetumCore` icosahedron + rings, 6.5s violet → green → gold → red  
+- Labels ALLOW / CONFIRM / DENY on the **right** of the orb  
+- Autonomy cards labeled as **read / propose / bounded auto / stop** (not chain L1/L2)  
+- `VetumHorizon` footer field, client-mounted so SSR does not explode  
 
-**Done when:** a judge can see two agents, one function.
+Done check: `/` then Enter chamber.
 
 ---
 
-## Chunk 5 — Live hook (optional, $5)
+## Chunk 4 — Skill Hub — DONE
 
-- MCP market-data read if keys exist
-- One spot attempt only if minNotional clears
-- Keep paper as default
+- `skills/vetum/SKILL.md`  
+- `lib/skill.ts` `check_policy`  
+- `/skill` + `SkillStudio` four callers  
 
-**Done when:** either a real order id *or* an honest “minNotional blocked, paper fill” row.
+Done check: MemeAgent 10x perp is DENY on the skill page.
 
-Do not start Chunk 5 until 2–4 work.
+---
+
+## Chunk 5 — Executor + demo docs — DONE (paper)
+
+- `lib/executor.ts`  
+- `DEMO.md` 90s script  
+- `MCP.md` official endpoint  
+
+Live MCP fill: **not required to submit**. Optional balance read if the operator pairs Agent OS.
+
+Done check: paper ALLOW + blocked futures (verified in PowerShell via `tmp-exec.mts`).
+
+---
+
+## Do not do next
+
+- Restyle the hero again  
+- Merge demoPolicy into defaultPolicy  
+- Commit API keys  
+- Enable futures “to see if MCP works”  
+- Replace `checkPolicy` with an LLM  
+
+## Do next (operator)
+
+1. Drop any files still only on this machine into `Documents\vetum`  
+2. `npm test`  
+3. Commit and push (commands in `memory.md`)  
+4. Record `DEMO.md`  
+5. Quote-tweet the repo + video  

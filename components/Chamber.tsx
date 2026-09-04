@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
-import { defaultPolicy } from "@/lib/defaultPolicy";
+import { demoPolicy } from "@/lib/demoPolicy";
 import { parseIntent } from "@/lib/parseIntent";
 import { checkPolicy } from "@/lib/policy";
 import type { AutonomyLevel, Decision, Policy } from "@/lib/types";
@@ -13,10 +14,10 @@ const VetumCore = dynamic(
 );
 
 const CHIPS = [
-  "Buy $3 of BNB on spot",
-  "Buy $4 of BNB on spot",
-  "Buy $500 BTC",
-  "Open 5x BTC perpetual",
+  "Buy $800 of BNB on spot",
+  "Buy $2,800 of ETH on spot",
+  "Buy $50,000 BTC",
+  "Open 10x BTC perpetual",
 ];
 
 type Row = Decision & { id: string; at: string };
@@ -40,7 +41,7 @@ function stripe(kind: Decision["kind"]) {
 }
 
 export function Chamber() {
-  const [policy, setPolicy] = useState<Policy>(defaultPolicy);
+  const [policy, setPolicy] = useState<Policy>(demoPolicy);
   const [agent, setAgent] = useState("PortfolioAgent");
   const [intent, setIntent] = useState("");
   const [last, setLast] = useState<Decision | null>(null);
@@ -77,8 +78,22 @@ export function Chamber() {
   }
 
   function halt() {
-    setPolicy((p) => ({ ...p, autonomy: "HALT" }));
-    run("Buy $3 of BNB on spot");
+    const haltedPolicy = { ...policy, autonomy: "HALT" as AutonomyLevel };
+    setPolicy(haltedPolicy);
+    const plan = parseIntent("Buy $800 of BNB on spot", agent);
+    const decision = checkPolicy(plan, haltedPolicy, {
+      mid_usd: MIDS[plan.symbol] ?? 0,
+      realized_pnl_today_usd: pnl,
+    });
+    const row: Row = {
+      ...decision,
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      at: new Date().toISOString().slice(11, 19),
+    };
+    setLast(decision);
+    setLedger((prev) => [row, ...prev]);
+    setTab("Plan");
+    setIntent("Buy $800 of BNB on spot");
   }
 
   function resume() {
@@ -90,16 +105,23 @@ export function Chamber() {
 
   return (
     <div className="min-h-screen bg-void text-bone">
-      <header className="flex items-center justify-between border-b border-line px-5 py-3">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-void/90 px-5 py-3 backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <a href="/" className="font-serif text-2xl leading-none">
-            Vetum
+          <a href="/" aria-label="Vetum home" className="block shrink-0">
+            <Image
+              src="/vetum-wordmark.jpg"
+              alt="Vetum"
+              width={126}
+              height={84}
+              className="h-7 w-auto object-contain object-center mix-blend-screen"
+              priority
+            />
           </a>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-mist sm:inline">
             Chamber
           </span>
         </div>
-        <div className="h-12 w-12 overflow-hidden rounded-full border border-line">
+        <div className="h-11 w-11 overflow-hidden rounded-full border border-line bg-void">
           <VetumCore
             state={
               policy.autonomy === "HALT"
@@ -113,7 +135,13 @@ export function Chamber() {
         </div>
         <div className="flex items-center gap-2 text-[11px] font-mono">
           <span className="rounded-full border border-line px-3 py-1 text-mist">
-            {policy.autonomy}
+            {policy.autonomy === "L0"
+              ? "L0 read"
+              : policy.autonomy === "L1"
+                ? "L1 propose"
+                : policy.autonomy === "L2"
+                  ? "L2 auto"
+                  : "HALT"}
           </span>
           <span className="rounded-full border border-line px-3 py-1 text-mist">
             ${spent.toFixed(2)} / ${policy.max_notional_usd.toFixed(2)}
@@ -124,14 +152,14 @@ export function Chamber() {
           {halted ? (
             <button
               onClick={resume}
-              className="rounded-sm border border-confirm px-3 py-1 text-confirm"
+              className="rounded-sm border border-confirm px-3 py-1 font-mono text-[10px] tracking-[0.16em] text-confirm hover:bg-confirm/10"
             >
               RESUME L2
             </button>
           ) : (
             <button
               onClick={halt}
-              className="rounded-sm border border-deny bg-deny/10 px-3 py-1 text-deny"
+              className="rounded-sm border border-deny bg-deny/10 px-3 py-1 font-mono text-[10px] tracking-[0.16em] text-deny hover:bg-deny/15"
             >
               HALT
             </button>
@@ -139,8 +167,8 @@ export function Chamber() {
         </div>
       </header>
 
-      <div className="grid min-h-[calc(100vh-53px)] grid-cols-1 lg:grid-cols-[1fr_360px]">
-        <main className="flex flex-col border-r border-line px-6 py-8 lg:px-10">
+      <div className="grid min-h-[calc(100vh-53px)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <main className="flex flex-col border-r border-line px-5 py-8 lg:px-12 lg:py-10">
           <div className="mb-6 flex items-center justify-between">
             <label className="font-mono text-[10px] uppercase tracking-[0.22em] text-mist">
               Agent
@@ -150,7 +178,7 @@ export function Chamber() {
                 <button
                   key={name}
                   onClick={() => setAgent(name)}
-                  className={`rounded-full px-3 py-1 font-mono text-[11px] ${
+                  className={`rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] ${
                     agent === name ? "bg-ink text-bone" : "text-mist"
                   }`}
                 >
@@ -160,12 +188,12 @@ export function Chamber() {
             </div>
           </div>
 
-          <h1 className="font-serif text-4xl leading-[0.95] md:text-5xl">
+          <h1 className="max-w-3xl font-serif text-5xl leading-[0.88] tracking-tight md:text-7xl">
             What should the agent attempt?
           </h1>
 
           <form
-            className="mt-8"
+            className="mt-8 flex items-end gap-3"
             onSubmit={(e) => {
               e.preventDefault();
               run(intent);
@@ -174,9 +202,18 @@ export function Chamber() {
             <input
               value={intent}
               onChange={(e) => setIntent(e.target.value)}
-              placeholder="Buy $3 of BNB on spot"
-              className="w-full border-b border-line bg-transparent pb-3 font-serif text-2xl outline-none placeholder:text-line"
+              placeholder="Buy $800 of BNB on spot"
+              className="min-w-0 flex-1 border-b border-line bg-transparent pb-4 font-serif text-2xl outline-none transition-colors placeholder:text-line focus:border-violet md:text-3xl"
             />
+            <button
+              type="submit"
+              aria-label="Submit intent"
+              className="mb-1 flex h-11 w-11 shrink-0 items-center justify-center border border-line text-bone hover:border-violet hover:bg-violet/10"
+            >
+              <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden>
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </form>
 
           <div className="mt-6 flex flex-wrap gap-2">
@@ -246,7 +283,7 @@ export function Chamber() {
               <pre className="whitespace-pre-wrap font-mono text-[11px] leading-5 text-mist">
                 {last
                   ? JSON.stringify(
-                      { agent: last.plan.agent, ...last.plan, decision: last.kind, code: last.code },
+                      { ...last.plan, decision: last.kind, code: last.code },
                       null,
                       2
                     )
@@ -352,7 +389,7 @@ export function Chamber() {
                   {visible.map((r) => (
                     <li
                       key={r.id}
-                      className="flex gap-2 border border-line bg-void/60 p-2 font-mono text-[10px]"
+                      className="flex gap-3 border border-line bg-void/60 p-3 font-mono text-[10px]"
                     >
                       <span className={`w-0.5 shrink-0 ${stripe(r.kind)}`} />
                       <div className="min-w-0 flex-1">
