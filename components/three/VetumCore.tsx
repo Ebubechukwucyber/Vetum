@@ -4,7 +4,7 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Html } from "@react-three/drei";
 import type { Group, Mesh } from "three";
-import { Color } from "three";
+import { Color, MeshBasicMaterial, MeshStandardMaterial } from "three";
 
 export type CoreState = "idle" | "planning" | "ALLOW" | "DENY" | "CONFIRM" | "HALT";
 
@@ -51,10 +51,13 @@ function Nucleus({
 
     target.current.set(COLORS[s]);
     color.current.lerp(target.current, Math.min(1, delta * 1.6));
-    const mat = mesh.current.material as { color: Color; emissive: Color; emissiveIntensity: number };
-    mat.color.copy(color.current);
-    mat.emissive.copy(color.current);
-    mat.emissiveIntensity = s === "HALT" ? 0 : s === "DENY" ? 0.22 : 0.46;
+    const raw = mesh.current.material;
+    const mat = Array.isArray(raw) ? raw[0] : raw;
+    if (mat instanceof MeshStandardMaterial) {
+      mat.color.copy(color.current);
+      mat.emissive.copy(color.current);
+      mat.emissiveIntensity = s === "HALT" ? 0 : s === "DENY" ? 0.22 : 0.46;
+    }
   });
 
   return (
@@ -89,15 +92,19 @@ function Rings({ state, autoCycle }: { state: CoreState; autoCycle?: boolean }) 
     tint.current.lerp(goal.current, Math.min(1, delta * 1.6));
     const paint = (mesh: Mesh | null, opacity: number) => {
       if (!mesh) return;
-      const mat = mesh.material as { color: Color; opacity: number };
-      mat.color.copy(tint.current);
-      mat.opacity = opacity;
+      const raw = mesh.material;
+      const mat = Array.isArray(raw) ? raw[0] : raw;
+      if (mat instanceof MeshBasicMaterial) {
+        mat.color.copy(tint.current);
+        mat.opacity = opacity;
+      }
     };
     paint(a.current, 0.78);
     paint(c.current, 0.45);
     if (b.current) {
-      const mat = b.current.material as { color: Color };
-      mat.color.lerp(tint.current, Math.min(1, delta * 0.35));
+      const raw = b.current.material;
+      const mat = Array.isArray(raw) ? raw[0] : raw;
+      if (mat instanceof MeshBasicMaterial) mat.color.lerp(tint.current, Math.min(1, delta * 0.35));
     }
   });
   return (
