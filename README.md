@@ -23,7 +23,13 @@ MCP endpoint (official):
 https://agent.binance.com/mcp/agentic
 ```
 
-Repo: https://github.com/Ebubechukwucyber/Vetum
+Repo: https://github.com/Ebubechukwucyber/Vetum  
+
+**Live demo (no install):** https://vetum.vercel.app  
+*(If that URL 404s, use the exact link Vercel printed after the first deploy and replace this line.)*
+
+Open **/app** first. Click the four chips, then **HALT**. That is Vetum.  
+Agent OS (ChatGPT + MCP) is the next section — after you have seen the gate.
 
 ---
 
