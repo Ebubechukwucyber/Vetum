@@ -9,7 +9,7 @@
 | [Edit the constitution](#the-constitution-is-editable) | Change caps, venues, HALT |
 | [Clone and test](#clone-and-test) | `npm test` + `agent/run.ts` |
 | [Agent OS / ChatGPT](#query-it-on-real-agent-os-chatgpt) | Bind MCP + your policy |
-| [What we built](#what-we-built) | Files and autonomy levels |
+| [What I built](#what-I-built) | Files and autonomy levels |
 | [Demo constitution](#demo-constitution-libdemopolicyts) | Default numbers |
 | [Threat model](#threat-model) | Keys, writes, halt |
 | [Repository](#repository) | Tree |
@@ -246,7 +246,7 @@ Cursor cannot finish Binance OAuth (no dynamic client registration). Use ChatGPT
 
 ---
 
-## What we built
+## What I built
 
 | Layer | Implementation |
 |---|---|
