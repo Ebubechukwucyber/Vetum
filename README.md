@@ -27,6 +27,51 @@ Repo: https://github.com/Ebubechukwucyber/Vetum
 
 ---
 
+## The problem
+
+Binance Agent OS lets an LLM call trading tools on an **Agentic sub-account**. That sandbox is real. It is not a **strategy constitution**.
+
+Account permission can still allow an agent to:
+
+- open **futures** when the desk only wanted spot
+- size a market buy past what the trader can survive
+- keep writing after the daily loss floor
+- attempt a **withdraw** the user never meant to grant at strategy level
+
+Exchange toggles are coarse (product on/off). They do not encode *this* trader:
+
+> “Spot only. Max $10k. Above $2,500 ask me. If I smash HALT, nothing writes — even a legal buy.”
+
+Vetum is that missing layer: **programmable policy between intent and MCP.**  
+Agents propose. Policy decides. Binance executes only after ALLOW.
+
+---
+
+## The constitution is editable
+
+The demo numbers are **not** the product. The product is that **you change the law** without rewriting the agent.
+
+Edit `lib/demoPolicy.ts` (Chamber) or `policy.example.yaml` (readable copy):
+
+| Knob | Example trader |
+|---|---|
+| `max_notional_usd` | $200 student desk vs $10,000 demo |
+| `confirmation_above` | “ask me above $100” vs “ask me above $2,500” |
+| `allowed_venues` / `forbidden_venues` | spot-only vs allow convert |
+| `allowed_symbols` | BNB only vs BTC/ETH book |
+| `max_leverage` | 1× vs a defined cap |
+| `max_daily_loss_usd` | stop the day after a floor |
+| `autonomy` | L0 read / L1 always confirm / L2 bounded auto / **HALT** |
+| `mode` | simulate first; live only when you mean it |
+
+Same `checkPolicy()`. Same Skill. Same ChatGPT host.  
+Two agents cannot fork the law — they all call one function.  
+Change the YAML/TS, re-run `npm test` / Chamber chips. The gate follows the new desk.
+
+Do **not** edit `lib/defaultPolicy.ts` to “match demo.” That file pins the 9 unit tests.
+
+---
+
 ## Judge in two minutes
 
 ```bash
