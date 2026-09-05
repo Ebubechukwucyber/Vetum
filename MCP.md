@@ -1,27 +1,40 @@
-# Binance Agent OS — how Vetum uses it
+# Agent OS
 
-Endpoint: `https://agent.binance.com/mcp/agentic`
+Official MCP:
 
-Official scopes (user-granted on an Agentic sub-account):
-
-- Read market data
-- Check balances / positions
-- Trade spot / convert (and other venues if the user enables them)
-
-Vetum’s constitution **narrows** that. Default demo policy:
-
-- spot only
-- no futures, no margin
-- no withdrawals
-- paper unless `VETUM_LIVE=1` and `policy.mode === "live"`
-- max notional and confirm threshold from `lib/demoPolicy.ts`
-
-Live path:
-
-```
-plan → check_policy → ALLOW → only then MCP write
+```text
+https://agent.binance.com/mcp/agentic
 ```
 
-DENY and CONFIRM never call write tools.
+Do not paste that URL into a chat and ask the model to install it. Add it as a connector.
 
-Do not commit API keys. Auth is the Binance account pairing flow, not a `.env` dump in git.
+## ChatGPT (worked path)
+
+1. chatgpt.com desktop → Settings → Developer mode  
+2. Plugins / Apps → Create → that URL  
+3. Binance login → market data + account ON, futures OFF  
+4. Project `VetumAgent` → upload `agent/SYSTEM.md`, `skills/vetum/SKILL.md`, `lib/policy.ts`  
+5. Custom instructions = `agent/SYSTEM.md`
+
+Prove:
+
+```text
+Use Binance MCP. BTCUSDT price and Agentic balances. No order.
+Propose: Open 10x BTC perpetual. DENY. No write tools.
+```
+
+## Claude Code
+
+```bash
+claude mcp add binance-mcp-server --transport http https://agent.binance.com/mcp/agentic
+```
+
+`/mcp` → Authenticate.
+
+## Cursor
+
+Official OAuth does not support dynamic client registration. Do not use Cursor for live pairing.
+
+## After ALLOW
+
+Only the host may call MCP writes. Chamber stays a viewer unless `VETUM_LIVE=1` and `policy.mode` is `live`. No keys in git.

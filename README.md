@@ -2,207 +2,212 @@
 
 **Agents propose. Policy decides. Binance executes.**
 
-Vetum is a programmable control plane for [Binance Agent OS](https://agent.binance.com). It is the constitution between an autonomous agent and an exchange write.
+Track A — [Binance Agent OS Mini Hackathon](https://x.com/binance/status/2094810011557838988)
 
-It is **not** a trading bot, signal model, meme sniper, or candlestick terminal.
+Vetum is a **Binance Agent OS agent** with a programmable constitution.  
+The host (ChatGPT, Claude Code, Codex) calls official MCP.  
+**Vetum decides whether that call is allowed.**
+
+It is not a signal bot, meme sniper, or candlestick terminal.
 
 ```
-intent  →  plan  →  simulate  →  checkPolicy()  →  ALLOW | DENY | CONFIRM
-                         ↓
-              paper fill  |  human  |  blocked
-                         ↓
-                    audit ledger
+intent → plan → checkPolicy() → ALLOW | DENY | CONFIRM
+                                      ↓
+                         ALLOW + live → Binance MCP write
+                         otherwise    → no write, ledger the stamp
 ```
 
-On `ALLOW` and only then may a caller invoke Binance MCP  
-`https://agent.binance.com/mcp/agentic`  
-on an Agentic sub-account. Withdrawals are out of scope. Futures are denied by the demo constitution.
+MCP endpoint (official):
+
+```text
+https://agent.binance.com/mcp/agentic
+```
+
+Repo: https://github.com/Ebubechukwucyber/Vetum
 
 ---
 
-## Why it exists
+## Judge in two minutes
 
-Agent OS lets an LLM call trading tools against a sandboxed sub-account. Account-level limits exist. They are not a **strategy constitution**.
-
-An agent can be “allowed to trade” and still:
-
-- open the wrong venue (perp instead of spot)
-- size past the desk’s max
-- keep writing after the daily loss floor
-- attempt a withdraw
-
-Vetum is the missing gate: deterministic TypeScript, no keys in the model, one function shared by every agent.
-
----
-
-## Contest framing
-
-- Event: Binance Agent OS Mini Hackathon  
-- Track: **A — Build an AI agent with Agent OS**  
-- Repo: https://github.com/Ebubechukwucyber/Vetum  
-- Skill id: `skills/vetum`
-
-Vetum is the **gate the agent must pass**. The agent is the caller (planner + MCP). The product you judge is: two agents, one constitution, three stamps, halt.
-
----
-
-## Quick start
-
-```powershell
-cd C:\Users\Ebubechukwu\Documents\vetum
+```bash
+git clone https://github.com/Ebubechukwucyber/Vetum.git
+cd Vetum
 npm install
 npm test
+```
+
+Expect **9/9**.
+
+```bash
+npx tsx agent/run.ts "Buy $800 of BNB on spot"
+npx tsx agent/run.ts "Open 10x BTC perpetual"
+```
+
+Windows PowerShell: use **single quotes** around the intent so `$800` is not a variable.
+
+| Command | Result |
+|---|---|
+| $800 BNB spot | `ALLOW` `WITHIN_CONSTITUTION` — no MCP write |
+| 10x BTC perpetual | `DENY` `FORBIDDEN_VENUE` — blocked |
+
+```bash
 npm run dev
 ```
 
-| URL | What |
+| URL | What to click |
 |---|---|
-| http://localhost:3000 | Cinematic gate + core |
-| http://localhost:3000/app | Chamber — live control plane |
-| http://localhost:3000/skill | Other agents call `check_policy()` |
-| /how /constitution /agents /ledger | Explainer surfaces |
+| [/](http://localhost:3000) | Product |
+| [/app](http://localhost:3000/app) | Chamber — four chips + **HALT** |
+| [/skill](http://localhost:3000/skill) | Two agents, one `check_policy` |
+| [/agent](http://localhost:3000/agent) | Track A loop |
 
-`npm test` must be **9/9**. Those tests pin `lib/defaultPolicy.ts` (small fixture). The UI uses `lib/demoPolicy.ts` (institutional demo caps). Do not merge those files.
+Chamber expected stamps:
 
----
-
-## The gate
-
-Source of truth: `lib/policy.ts`
-
-```ts
-checkPolicy(plan, policy, market) → Decision
-```
-
-Public Skill Hub name: `lib/skill.ts` → `check_policy(plan, constitution?, market?)`
-
-Decision:
-
-```
-kind: ALLOW | DENY | CONFIRM
-code: WITHIN_CONSTITUTION | HALTED | READ_ONLY | FORBIDDEN_VENUE
-      | SYMBOL_NOT_ALLOWED | MAX_NOTIONAL | MAX_LEVERAGE
-      | DAILY_LOSS_FLOOR | WITHDRAWAL_FORBIDDEN | REQUIRES_HUMAN
-reason: string
-plan: Plan
-simulated: { mid, fee, slippage, fill, exposure }
-```
-
-Check order (constitution, not a prompt):
-
-1. HALT  
-2. L0 read-only  
-3. Withdraw / on-chain leave  
-4. Forbidden venue / not in allowlist  
-5. Symbol allowlist  
-6. Daily loss floor  
-7. Max notional  
-8. Leverage  
-9. L1 always confirm / confirmation_above  
-10. ALLOW  
-
-There is no LLM inside this function.
+| Chip | Stamp |
+|---|---|
+| Buy $800 of BNB on spot | ALLOW |
+| Buy $2,800 of ETH on spot | CONFIRM |
+| Buy $50,000 BTC | DENY `MAX_NOTIONAL` |
+| Open 10x BTC perpetual | DENY `FORBIDDEN_VENUE` |
+| **HALT**, then any legal chip | DENY `HALTED` |
 
 ---
 
-## Autonomy (not blockchain layers)
+## Query it on real Agent OS (ChatGPT)
+
+Vetum is not a second MCP server. Binance hosts MCP. You attach Vetum as the **agent constitution**.
+
+### 1. Connect Binance MCP to ChatGPT
+
+Desktop browser → [chatgpt.com](https://chatgpt.com)
+
+1. Settings → enable **Developer mode**
+2. Plugins / Apps → **Create**
+3. URL:
+
+```text
+https://agent.binance.com/mcp/agentic
+```
+
+4. Authenticate on Binance  
+5. Enable **market data** + **account**. Leave **futures** and withdraw **off**.
+
+### 2. Bind Vetum
+
+Create a ChatGPT **Project** named `VetumAgent`. Upload:
+
+```text
+agent/SYSTEM.md
+skills/vetum/SKILL.md
+lib/policy.ts
+```
+
+Paste `agent/SYSTEM.md` into **Custom instructions**.
+
+### 3. Prompts that prove it
+
+Plugin **on**, inside that project:
+
+```text
+Use Binance MCP. Show BTCUSDT price and Agentic spot balances. Do not place an order.
+```
+
+```text
+Propose: Buy $800 of BNB on spot. Stamp ALLOW/DENY/CONFIRM. No write tools.
+```
+
+```text
+Propose: Open 10x BTC perpetual. Stamp DENY. Do not call futures tools.
+```
+
+Pass: real **tool call** for price; perp is **DENY** and no write tool.
+
+Claude Code (official recipe) if you use that host instead:
+
+```bash
+claude mcp add binance-mcp-server --transport http https://agent.binance.com/mcp/agentic
+```
+
+Then `/mcp` → Authenticate. Same `SYSTEM.md`.  
+Cursor cannot finish Binance OAuth (no dynamic client registration). Use ChatGPT or Claude Code.
+
+---
+
+## What we built
+
+| Layer | Implementation |
+|---|---|
+| Agent | `agent/run.ts` + `agent/SYSTEM.md` (ChatGPT / Claude) |
+| Gate | `lib/policy.ts` → `checkPolicy` |
+| Skill | `skills/vetum/SKILL.md` + `lib/skill.ts` → `check_policy` |
+| Plan | `lib/parseIntent.ts` |
+| After stamp | `lib/executor.ts` |
+| Control room | `/app` Chamber |
+| Demo constitution | `lib/demoPolicy.ts` (UI) |
+| Test fixture | `lib/defaultPolicy.ts` — **do not merge with demo** |
+
+Autonomy is **not** a blockchain layer:
 
 | Level | Meaning |
 |---|---|
 | **L0 — read only** | Markets only. Every write DENY. |
-| **L1 — propose** | Plans exist. Every order CONFIRM. |
+| **L1 — propose** | Every order CONFIRM. |
 | **L2 — bounded auto** | Demo default. Legal spot under caps may ALLOW. |
 | **HALT — stop** | Circuit breaker. Even a legal spot buy is DENY. |
 
----
+Check order in `checkPolicy`: HALT → L0 → withdraw → venue → symbol → daily loss → notional → leverage → confirm → ALLOW.
 
-## Paper vs live
-
-| Mode | What happens on ALLOW |
-|---|---|
-| **paper** (default) | Simulated fill. MCP is not called. |
-| **live** | Only if `policy.mode === "live"` **and** `VETUM_LIVE=1`. Caller may hit MCP spot write. |
-
-`lib/executor.ts` encodes that. The **PAPER** pill in Chamber is a lamp, not a toggle. Do not put API keys in git.
-
-Verified locally:
-
-```
-Buy $800 BNB spot     → PAPER + ALLOW + WITHIN_CONSTITUTION
-Open 10x BTC perp     → BLOCKED + DENY + FORBIDDEN_VENUE
-```
+Writes never run on DENY or CONFIRM. No API keys in git. Auth is Binance pairing.
 
 ---
 
-## Demo constitution (UI)
+## Demo constitution (`lib/demoPolicy.ts`)
 
-`lib/demoPolicy.ts`
-
-- autonomy L2, mode paper  
-- max_notional_usd 10_000  
-- confirmation_above 2_500  
-- max_daily_loss_usd 1_500  
-- allowed venues: spot  
-- forbidden: futures, margin  
+- L2, spot only  
+- max notional **$10,000**  
+- confirm above **$2,500**  
+- daily loss floor **$1,500**  
+- forbidden: futures, margin, withdraw  
 - symbols: BNBUSDT, BTCUSDT, ETHUSDT  
-- withdrawals: false  
-
-Chamber chips (expected stamps):
-
-| Intent | Stamp |
-|---|---|
-| Buy $800 of BNB on spot | ALLOW |
-| Buy $2,800 of ETH on spot | CONFIRM |
-| Buy $50,000 BTC | DENY MAX_NOTIONAL |
-| Open 10x BTC perpetual | DENY FORBIDDEN_VENUE |
-| HALT, then a legal spot buy | DENY HALTED |
-
----
-
-## Repository map
-
-```
-lib/policy.ts              the gate
-lib/skill.ts               Skill Hub wrapper
-lib/executor.ts            paper / blocked / live-queued
-lib/parseIntent.ts         language → plan (heuristic)
-lib/demoPolicy.ts          UI constitution
-lib/defaultPolicy.ts       test fixture — do not “fix” to $10k
-lib/*.test.ts              9 tests
-skills/vetum/SKILL.md      Agent OS skill contract
-components/Chamber.tsx     control room
-components/GateLanding.tsx /
-components/three/          R3F core + horizon
-components/SkillStudio.tsx two agents call the skill
-app/app                    /app
-DEMO.md                    90s shot list
-MCP.md                     official endpoint notes
-project.context.md         product bible for any LLM
-```
 
 ---
 
 ## Threat model
 
-- LLM never holds keys.  
-- Writes never happen on DENY or CONFIRM.  
-- Withdrawals are always denied.  
-- Default venue is spot; futures are forbidden in the demo constitution.  
-- Live requires two switches, not one UI click.  
-- Two agents cannot fork policy. They call the same function.
+- The LLM never holds exchange keys.  
+- Two agents (PortfolioAgent, MemeAgent) share one function.  
+- Withdrawals are out of scope.  
+- Live MCP write only after ALLOW and an explicit live instruction.  
+- HALT is a hard stop, not a prompt suggestion.
 
 ---
 
-## Record and submit
+## Repository
 
-See `DEMO.md`. Ninety seconds:
-
-`/` → `/app` four chips + HALT + agent toggle → `/skill` → `/`
-
-Quote line: **Vetum — agents propose, policy decides.**
+```
+lib/policy.ts              gate
+lib/skill.ts               check_policy
+lib/executor.ts            after the stamp
+lib/parseIntent.ts         intent → plan
+lib/demoPolicy.ts          UI constitution
+lib/defaultPolicy.ts       test fixture
+lib/*.test.ts              npm test — 9 tests
+agent/run.ts               local VetumAgent
+agent/SYSTEM.md            paste into ChatGPT / Claude
+skills/vetum/SKILL.md      Agent OS skill
+app/app                    Chamber
+app/skill                  Skill Hub
+app/agent                  Track A page
+MCP.md                     official endpoint
+DEMO.md                    recording shot list
+```
 
 ---
 
-## License / status
+## Line for the submission tweet
 
-Hackathon prototype. Paper-first. Not financial advice. Not a hosted exchange.
+> Track A — VetumAgent on Binance Agent OS.  
+> Agents propose. Policy decides. MCP executes only after ALLOW.  
+> https://github.com/Ebubechukwucyber/Vetum
+
+Hackathon prototype. Not financial advice. Not a hosted exchange.
