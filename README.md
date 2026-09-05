@@ -2,6 +2,19 @@
 
 **Agents propose. Policy decides. Binance executes.**
 
+| | |
+|---|---|
+| [See it first](#see-it-first-no-install) | Hosted demo, no install |
+| [The problem](#the-problem) | Why Agent OS permission is not enough |
+| [Edit the constitution](#the-constitution-is-editable) | Change caps, venues, HALT |
+| [Clone and test](#clone-and-test-after-the-live-demo) | `npm test` + `agent/run.ts` |
+| [Agent OS / ChatGPT](#query-it-on-real-agent-os-chatgpt) | Bind MCP + your policy |
+| [What we built](#what-we-built) | Files and autonomy levels |
+| [Demo constitution](#demo-constitution-libdemopolicyts) | Default numbers |
+| [Threat model](#threat-model) | Keys, writes, halt |
+| [Repository](#repository) | Tree |
+| [Tweet](#line-for-the-submission-tweet) | Submit line |
+
 Track A — [Binance Agent OS Mini Hackathon](https://x.com/binance/status/2094810011557838988)
 
 Vetum is a **Binance Agent OS agent** with a programmable constitution.  
@@ -29,21 +42,19 @@ Repo: https://github.com/Ebubechukwucyber/Vetum
 
 ## See it first (no install)
 
-**Live demo:** [https://vetum.vercel.app](https://vetum.vercel.app)
+**[https://vetum.vercel.app](https://vetum.vercel.app)** — demo site only.
 
-Start here before `npm test` and before connecting ChatGPT to Binance MCP.  
-The hosted app *is* the gate. Agent OS is how that same gate talks to the exchange.
+This is **not** the Agent OS agent. It does not log into Binance, does not call MCP, and cannot place an order. It is a hosted viewer of the same `checkPolicy` stamps so you can understand Vetum before anything else.
 
-| Open | Do this |
+1. Click around the site (`/app` chips + HALT).  
+2. Then clone and `npm test` if you want the proof in code.  
+3. Then [Agent OS / ChatGPT](#query-it-on-real-agent-os-chatgpt) if you want the **real** agent (MCP tools + your constitution).
+
+| Page | |
 |---|---|
-| [vetum.vercel.app](https://vetum.vercel.app) | One-line product |
-| [vetum.vercel.app/app](https://vetum.vercel.app/app) | Chamber — four intents + **HALT** |
-| [vetum.vercel.app/skill](https://vetum.vercel.app/skill) | Two agents, one `check_policy` |
-| [vetum.vercel.app/agent](https://vetum.vercel.app/agent) | Track A loop |
-
-On `/app` click in order: $800 BNB → ALLOW · $2,800 ETH → CONFIRM · $50k BTC → DENY · 10x perp → DENY · **HALT** → DENY. That is the demo.
-
-Then come back here to clone, run tests, or bind Agent OS.
+| [vetum.vercel.app](https://vetum.vercel.app) | Landing |
+| [/app](https://vetum.vercel.app/app) | Chamber — $800 ALLOW · $2.8k CONFIRM · $50k DENY · perp DENY · HALT |
+| [/skill](https://vetum.vercel.app/skill) | Two agents, one gate |
 
 ---
 
