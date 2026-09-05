@@ -137,19 +137,50 @@ https://agent.binance.com/mcp/agentic
 4. Authenticate on Binance  
 5. Enable **market data** + **account**. Leave **futures** and withdraw **off**.
 
-### 2. Bind Vetum
+### 2. Bind Vetum — then make it *your* desk
 
-Create a ChatGPT **Project** named `VetumAgent`. Upload:
+The files in the repo are a **starter constitution**, not a lock.
+
+Create a ChatGPT **Project** (any name). Upload:
 
 ```text
 agent/SYSTEM.md
 skills/vetum/SKILL.md
 lib/policy.ts
+lib/demoPolicy.ts
+policy.example.yaml
 ```
 
-Paste `agent/SYSTEM.md` into **Custom instructions**.
+Paste `agent/SYSTEM.md` into **Custom instructions**, then **edit the numbers in that paste** so they match how *you* trade. Example — change only the constitution block:
 
-### 3. Prompts that prove it
+```text
+Constitution (edit these lines to your desk):
+- venues allowed: spot          ← or add convert; keep futures off if you want
+- forbidden: futures, margin, withdraw
+- max notional: 500 USD         ← yours, not our $10,000 demo
+- confirm above: 100 USD        ← ask a human above this
+- daily loss floor: 50 USD
+- symbols allowed: BNBUSDT      ← or BTCUSDT, ETHUSDT, …
+- autonomy: L2                  ← L0 read | L1 always confirm | L2 bounded | HALT
+- live orders: only if I say "live allow"
+```
+
+Same idea in the Project files: edit `demoPolicy.ts` / `policy.example.yaml` in the upload (or edit locally and re-upload).  
+`checkPolicy` does not change. Only the **inputs** change.
+
+Tell the host, once, in that project:
+
+```text
+Use the constitution I wrote above, not the repo demo numbers, when you stamp ALLOW / DENY / CONFIRM.
+```
+
+To change policy later: edit Custom instructions or say  
+`Update constitution: max notional 200, spot only, HALT off`  
+and the agent must restamp from the new law. HALT is still a hard stop until you say RESUME L2.
+
+Binance toggles (futures off) stay as a second lock. Vetum is the **strategy** lock you can rewrite.
+
+### 3. Prompts that prove it (use *your* sizes)
 
 Plugin **on**, inside that project:
 
@@ -158,14 +189,15 @@ Use Binance MCP. Show BTCUSDT price and Agentic spot balances. Do not place an o
 ```
 
 ```text
-Propose: Buy $800 of BNB on spot. Stamp ALLOW/DENY/CONFIRM. No write tools.
+Propose a spot buy under my max notional. Stamp ALLOW/DENY/CONFIRM. No write tools.
 ```
 
 ```text
-Propose: Open 10x BTC perpetual. Stamp DENY. Do not call futures tools.
+Propose: Open 10x BTC perpetual. Stamp DENY if my constitution forbids futures. No write tools.
 ```
 
-Pass: real **tool call** for price; perp is **DENY** and no write tool.
+Pass: real **tool call** for price; a forbidden venue is **DENY** and no write tool.  
+If you set max notional to $200, a $800 buy must DENY — that proves *your* policy loaded, not ours.
 
 Claude Code (official recipe) if you use that host instead:
 
