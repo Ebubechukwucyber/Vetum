@@ -7,7 +7,7 @@
 | [See it first](#see-it-first-no-install) | Hosted demo, no install |
 | [The problem](#the-problem) | Why Agent OS permission is not enough |
 | [Edit the constitution](#the-constitution-is-editable) | Change caps, venues, HALT |
-| [Clone and test](#clone-and-test-after-the-live-demo) | `npm test` + `agent/run.ts` |
+| [Clone and test](#clone-and-test) | `npm test` + `agent/run.ts` |
 | [Agent OS / ChatGPT](#query-it-on-real-agent-os-chatgpt) | Bind MCP + your policy |
 | [What we built](#what-we-built) | Files and autonomy levels |
 | [Demo constitution](#demo-constitution-libdemopolicyts) | Default numbers |
