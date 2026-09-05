@@ -1,6 +1,6 @@
-import { parseIntent } from "../lib/parseIntent.ts";
-import { executePlan } from "../lib/executor.ts";
-import { demoPolicy } from "../lib/demoPolicy.ts";
+import { parseIntent } from "../lib/parseIntent";
+import { executePlan } from "../lib/executor";
+import { demoPolicy } from "../lib/demoPolicy";
 
 const intent = process.argv.slice(2).join(" ").trim();
 if (!intent) {
