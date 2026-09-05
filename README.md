@@ -103,7 +103,7 @@ Do **not** edit `lib/defaultPolicy.ts` to “match demo.” That file pins the 9
 
 ---
 
-## Clone and test (after the live demo)
+## Clone and test
 
 ```bash
 git clone https://github.com/Ebubechukwucyber/Vetum.git
