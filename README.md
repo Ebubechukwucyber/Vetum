@@ -151,34 +151,39 @@ lib/demoPolicy.ts
 policy.example.yaml
 ```
 
-Paste `agent/SYSTEM.md` into **Custom instructions**, then **edit the numbers in that paste** so they match how *you* trade. Example — change only the constitution block:
+ChatGPT does **not** run TypeScript. Two different places, two edits:
+
+| Where you trade | File you change | Leave alone |
+|---|---|---|
+| Website Chamber (`npm run dev`) | **`lib/demoPolicy.ts` only** | `lib/policy.ts` |
+| ChatGPT Agent OS | **Custom instructions** — the constitution list below | You do not need to edit uploaded `.ts` files |
+
+Paste `agent/SYSTEM.md` into Custom instructions, then change **only this list** to your desk:
 
 ```text
-Constitution (edit these lines to your desk):
-- venues allowed: spot          ← or add convert; keep futures off if you want
+Constitution (edit these lines):
+- venues allowed: spot
 - forbidden: futures, margin, withdraw
-- max notional: 500 USD         ← yours, not our $10,000 demo
-- confirm above: 100 USD        ← ask a human above this
+- max notional: 500 USD
+- confirm above: 100 USD
 - daily loss floor: 50 USD
-- symbols allowed: BNBUSDT      ← or BTCUSDT, ETHUSDT, …
-- autonomy: L2                  ← L0 read | L1 always confirm | L2 bounded | HALT
+- symbols allowed: BNBUSDT
+- autonomy: L2
 - live orders: only if I say "live allow"
 ```
 
-Same idea in the Project files: edit `demoPolicy.ts` / `policy.example.yaml` in the upload (or edit locally and re-upload).  
-`checkPolicy` does not change. Only the **inputs** change.
-
-Tell the host, once, in that project:
+Then tell ChatGPT once:
 
 ```text
-Use the constitution I wrote above, not the repo demo numbers, when you stamp ALLOW / DENY / CONFIRM.
+Stamp ALLOW / DENY / CONFIRM using the constitution in these instructions, not the demo $10,000 in the repo.
 ```
 
-To change policy later: edit Custom instructions or say  
-`Update constitution: max notional 200, spot only, HALT off`  
-and the agent must restamp from the new law. HALT is still a hard stop until you say RESUME L2.
+Later changes: edit that list again, or say `Update constitution: max notional 200`.  
+HALT stays a hard stop until you say `RESUME L2`.
 
-Binance toggles (futures off) stay as a second lock. Vetum is the **strategy** lock you can rewrite.
+Uploaded `demoPolicy.ts` is only reference. If you skip the Custom instructions edit, ChatGPT will keep the demo numbers even if you changed the file on disk.
+
+Binance product toggles (futures off) are a second lock. Vetum is the strategy lock.
 
 ### 3. Prompts that prove it (use *your* sizes)
 
