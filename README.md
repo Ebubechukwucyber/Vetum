@@ -13,7 +13,6 @@
 | [Demo constitution](#demo-constitution-libdemopolicyts) | Default numbers |
 | [Threat model](#threat-model) | Keys, writes, halt |
 | [Repository](#repository) | Tree |
-| [Tweet](#line-for-the-submission-tweet) | Submit line |
 
 Track A — [Binance Agent OS Mini Hackathon](https://x.com/binance/status/2094810011557838988)
 
@@ -316,11 +315,5 @@ DEMO.md                    recording shot list
 ```
 
 ---
-
-## Line for the submission tweet
-
-> Track A — VetumAgent on Binance Agent OS.  
-> Agents propose. Policy decides. MCP executes only after ALLOW.  
-> https://github.com/Ebubechukwucyber/Vetum
 
 Hackathon prototype. Not financial advice. Not a hosted exchange.
