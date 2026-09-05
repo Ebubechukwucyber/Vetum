@@ -23,13 +23,27 @@ MCP endpoint (official):
 https://agent.binance.com/mcp/agentic
 ```
 
-Repo: https://github.com/Ebubechukwucyber/Vetum  
+Repo: https://github.com/Ebubechukwucyber/Vetum
 
-**Live demo (no install):** https://vetum.vercel.app  
-*(If that URL 404s, use the exact link Vercel printed after the first deploy and replace this line.)*
+---
 
-Open **/app** first. Click the four chips, then **HALT**. That is Vetum.  
-Agent OS (ChatGPT + MCP) is the next section — after you have seen the gate.
+## See it first (no install)
+
+**Live demo:** [https://vetum.vercel.app](https://vetum.vercel.app)
+
+Start here before `npm test` and before connecting ChatGPT to Binance MCP.  
+The hosted app *is* the gate. Agent OS is how that same gate talks to the exchange.
+
+| Open | Do this |
+|---|---|
+| [vetum.vercel.app](https://vetum.vercel.app) | One-line product |
+| [vetum.vercel.app/app](https://vetum.vercel.app/app) | Chamber — four intents + **HALT** |
+| [vetum.vercel.app/skill](https://vetum.vercel.app/skill) | Two agents, one `check_policy` |
+| [vetum.vercel.app/agent](https://vetum.vercel.app/agent) | Track A loop |
+
+On `/app` click in order: $800 BNB → ALLOW · $2,800 ETH → CONFIRM · $50k BTC → DENY · 10x perp → DENY · **HALT** → DENY. That is the demo.
+
+Then come back here to clone, run tests, or bind Agent OS.
 
 ---
 
@@ -78,7 +92,7 @@ Do **not** edit `lib/defaultPolicy.ts` to “match demo.” That file pins the 9
 
 ---
 
-## Judge in two minutes
+## Clone and test (after the live demo)
 
 ```bash
 git clone https://github.com/Ebubechukwucyber/Vetum.git
